@@ -34,6 +34,18 @@ public class TimerBoundary {
         this.deviceId = deviceId;
         this.deviceAction = deviceAction;
     }
+    public TimerBoundary(TimerEntity entity){
+        this.timerId = entity.getTimerId();
+        this.name = entity.getName();
+        this.description = entity.getDescription();
+        this.createdAt = entity.getCreatedAt();
+        this.status = entity.getStatus();
+        this.startTime = entity.getStartTime();
+        this.duration = entity.getDuration();
+        this.recurrence = entity.getRecurrence();
+        this.deviceId = entity.getDeviceId();
+        this.deviceAction = entity.getDeviceAction();
+    }
 
     public String getTimerId() {
         return timerId;
