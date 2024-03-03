@@ -3,6 +3,7 @@ package afeka.ac.il.timersservice.logic;
 import java.util.function.Consumer;
 
 
+import afeka.ac.il.timersservice.boundaries.TimerBoundary;
 import jakarta.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,8 +25,21 @@ public class TImerListener {
     public void init() {
         this.jackson = new ObjectMapper();
     }
+
+
     @Bean
-    public Consumer<String> TimerSink() {
-        return  null;
+    public Consumer<String> demoTimerSink(){
+        return stringInput->{
+            try {
+
+                this.logger.trace("*** received: " + stringInput);
+                TimerBoundary timer = this.jackson.readValue(stringInput, TimerBoundary.class);
+                this.logger.info("*** TimerBoundary: " + timer);
+
+            }
+            catch (Exception e) {
+                this.logger.error(e);
+            }
+        };
     }
 }
