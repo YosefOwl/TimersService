@@ -98,7 +98,7 @@ public class RSocketClientTimerCtrl {
     }
 
 
-    @DeleteMapping(path = {"cancel/timer-id/{timerId}"})
+    @DeleteMapping(path = {"cancel/{timerId}"})
     public Mono<Void> cancelTimerById(
             @PathVariable("timerId") String timerId) {
         return this.requester
@@ -108,7 +108,7 @@ public class RSocketClientTimerCtrl {
                 .log();
     }
 
-    @DeleteMapping(path = {"cancel/device-id/{deviceId}"})
+    @DeleteMapping(path = {"cancel/{deviceId}"})
     public Mono<Void> cancelTimerByDeviceId(
             @PathVariable("deviceId") String deviceId) {
         return this.requester
