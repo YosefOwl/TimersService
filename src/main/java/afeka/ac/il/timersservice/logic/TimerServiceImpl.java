@@ -41,12 +41,11 @@ public class TimerServiceImpl implements TimerService{
             return Mono.error(new RuntimeException());
         }
 
-        this.scheduleTimer.addTimerBoundary(timer);
-
         return Mono.just(timer)
                 .map(TimerBoundary::toEntity)
                 .flatMap(this.timerCrud::save)
                 .map(TimerBoundary::new);
+
     }
 
 
