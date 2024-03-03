@@ -8,7 +8,7 @@ import afeka.ac.il.timersservice.boundaries.TYPE;
 import afeka.ac.il.timersservice.dataAccess.TimerCrud;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
-import org.springframework.cloud.stream.function.StreamBridge;
+
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -18,17 +18,12 @@ import java.util.Date;
 @Service
 public class TimerServiceImpl implements TimerService{
     private final TimerCrud timerCrud;
-    private final StreamBridge kafka;
-    private ObjectMapper jackson;
 
-    public TimerServiceImpl(TimerCrud timerCrud, StreamBridge kafka){
+    private ScheduleTimer scheduleTimer;
+
+    public TimerServiceImpl(TimerCrud timerCrud, ScheduleTimer scheduleTimer){
         this.timerCrud = timerCrud;
-        this.kafka = kafka;
-    }
-
-    @PostConstruct
-    public void init(){
-        this.jackson = new ObjectMapper();
+        this.scheduleTimer = scheduleTimer;
     }
 
     @Override
@@ -45,6 +40,9 @@ public class TimerServiceImpl implements TimerService{
         if (!isValidTimer(timer)){
             return Mono.error(new RuntimeException());
         }
+
+        this.scheduleTimer.addTimerBoundary(timer);
+
         return Mono.just(timer)
                 .map(TimerBoundary::toEntity)
                 .flatMap(this.timerCrud::save)

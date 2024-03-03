@@ -7,7 +7,7 @@ import afeka.ac.il.timersservice.data.TimerEntity;
 
 import java.util.Date;
 
-public class TimerBoundary {
+public class TimerBoundary implements Comparable<TimerBoundary> {
 
     private String timerId;
     private String name;
@@ -142,6 +142,12 @@ public class TimerBoundary {
 
         return rv;
     }
+
+    @Override
+    public int compareTo(TimerBoundary other) {
+        return this.startTime.compareTo(other.startTime);
+    }
+
 
     @Override
     public String toString() {
