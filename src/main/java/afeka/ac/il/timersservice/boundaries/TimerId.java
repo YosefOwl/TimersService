@@ -10,10 +10,13 @@ public class TimerId {
         super();
         this.id = id;
     }
-    public String getId(){
-        return getId();
+
+    public String getId() {
+        return id;
     }
-    public void setId(String id){
+
+    public TimerId setId(String id) {
         this.id = id;
+        return this;
     }
 }

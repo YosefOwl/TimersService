@@ -27,6 +27,9 @@ public class RSocketCtrl {
                 .log();
     }
 
+
+    // TODO: shall be Mono<Void> and fnf operation and change the rest API also to PUT.
+    // also need to update the timers spec
     @MessageMapping("update-timer-req-resp")
     public Mono<TimerBoundary> updateTimer(@Payload TimerBoundary timer) {
         return timerService
