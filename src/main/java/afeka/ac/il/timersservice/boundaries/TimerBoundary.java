@@ -2,7 +2,7 @@ package afeka.ac.il.timersservice.boundaries;
 
 import afeka.ac.il.timersservice.data.DeviceAction;
 import afeka.ac.il.timersservice.data.Duration;
-import afeka.ac.il.timersservice.data.Recurrence;
+import afeka.ac.il.timersservice.boundaries.Recurrence;
 import afeka.ac.il.timersservice.data.TimerEntity;
 
 import java.util.Date;

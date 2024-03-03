@@ -1,8 +1,9 @@
-package afeka.ac.il.timersservice.data;
+package afeka.ac.il.timersservice.boundaries;
+
 
 import java.util.Date;
 
-enum TYPE{ONCE,DAILY,MONTHLY,ANNUALLY}
+
 public class Recurrence {
     private TYPE type;
     private int interval;

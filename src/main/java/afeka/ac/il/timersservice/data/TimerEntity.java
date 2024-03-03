@@ -1,5 +1,6 @@
 package afeka.ac.il.timersservice.data;
 
+import afeka.ac.il.timersservice.boundaries.Recurrence;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

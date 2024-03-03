@@ -2,6 +2,9 @@ package afeka.ac.il.timersservice.logic;
 
 
 import afeka.ac.il.timersservice.boundaries.TimerBoundary;
+import afeka.ac.il.timersservice.data.Duration;
+import afeka.ac.il.timersservice.boundaries.Recurrence;
+import afeka.ac.il.timersservice.boundaries.TYPE;
 import afeka.ac.il.timersservice.dataAccess.TimerCrud;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
@@ -14,8 +17,8 @@ import java.util.Date;
 
 @Service
 public class TimerServiceImpl implements TimerService{
-    private TimerCrud timerCrud;
-    private StreamBridge kafka;
+    private final TimerCrud timerCrud;
+    private final StreamBridge kafka;
     private ObjectMapper jackson;
 
     public TimerServiceImpl(TimerCrud timerCrud, StreamBridge kafka){
@@ -33,13 +36,65 @@ public class TimerServiceImpl implements TimerService{
 
         timer.setTimerId(null);
         timer.setCreatedAt(new Date());
+        timer.setStatus("hold");
 
-        //TODO: add validate object
+        if (timer.getRecurrence().getType() == null)
+            timer.getRecurrence().setType(TYPE.ONCE);
 
+
+        if (!isValidTimer(timer)){
+            return Mono.error(new RuntimeException());
+        }
         return Mono.just(timer)
                 .map(TimerBoundary::toEntity)
                 .flatMap(this.timerCrud::save)
                 .map(TimerBoundary::new);
+    }
+
+
+    private boolean isValidTimer(TimerBoundary timer) {
+        String deviceId = timer.getDeviceId();
+
+        if (deviceId == null || deviceId.isEmpty())
+            return false;
+
+        Date startTime = timer.getStartTime();
+        Date currentTime = new Date();
+
+        if (startTime.before(currentTime))
+            return false;
+
+        if (!isValidDuration(timer.getDuration()))
+            return false;
+
+        Recurrence recurrence = timer.getRecurrence();
+
+        // TODO: verify type
+
+        // Check if interval is a positive integer
+        if (recurrence.getInterval() <= 0)
+            return false;
+
+
+        // Check if endDate is optional and has a valid format if present
+        if (recurrence.getEndDate() != null && recurrence.getEndDate().before(startTime)) {
+            return false;
+        }
+
+        return true;
+    }
+    private boolean isValidDuration(Duration duration) {
+        return isNonNegative(duration.getHours()) &&
+                isInRange(duration.getMinutes()) &&
+                isInRange(duration.getSeconds());
+    }
+
+    private boolean isNonNegative(Integer value) {
+        return value != null && value >= 0;
+    }
+
+    private boolean isInRange(Integer value) {
+        return value != null && value >= 0 && value <= 59;
     }
 
     @Override
