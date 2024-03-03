@@ -33,8 +33,6 @@ public class TImerListener {
             try {
 
                 this.logger.trace("*** received: " + stringInput);
-                TimerBoundary timer = this.jackson.readValue(stringInput, TimerBoundary.class);
-                this.logger.info("*** TimerBoundary: " + timer);
 
             }
             catch (Exception e) {
