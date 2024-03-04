@@ -40,19 +40,19 @@ public class ScheduleTimer {
 
 
     // This method will be executed every second
-    @Scheduled(fixedDelay = 60000) // Cron expression for every 60 seconds
+    @Scheduled(fixedDelay = 5000) // Cron expression for every 60 seconds
     public void checkTimerBoundary() {
 
-        Flux<TimerEntity> entities = this.timerCrud.findAll();
+        Flux<TimerEntity> entities = this.timerCrud.findAllByStatusHoldOrActice();
 
         entities.map(TimerBoundary::new)
                 .filter(timerBoundary -> (new Date()).after(timerBoundary.getStartTime()))
-                .subscribe(timer -> sendToKafka((TimerBoundary) timer));
+                .subscribe(timer -> manageTimer((TimerBoundary) timer));
     }
 
 
     public Mono<TimerBoundary> sendToKafka(TimerBoundary timerBoundary){
-        System.err.println("ON: " + timerBoundary);
+
         try{
             String messageToKafka = this.jackson.writeValueAsString(timerBoundary);
             return Mono.just(messageToKafka)
@@ -62,6 +62,38 @@ public class ScheduleTimer {
         }catch (Exception err){
             throw new RuntimeException(err);
         }
+    }
+
+    public void manageTimer(TimerBoundary timerBoundary){
+
+        if (timerBoundary.getStatus().equals("active") &&
+                timerBoundary.getFinishedTime().before(new Date())) //If timer is active and if the timer is finished
+        {
+            setStatusByCrud(timerBoundary,"hold"); // Update in the DB
+            // TO DO - SEND TO KAFKA ?
+        } else if(timerBoundary.getUpdateTime().after(new Date())) { //else (hold) and if the timer is need to start
+            // timerBoundary.getStatus() = hold
+            // TO DO - SEND TO KAFKA ?
+            setStatusByCrud(timerBoundary,"active"); // Update in the DB
+        }else if(checkEndTime(timerBoundary)){ // timerBoundary.getStatus() = hold and need to complete
+                setStatusByCrud(timerBoundary,"complete"); // Update in the DB
+        }
+
+        System.err.println(timerBoundary);
+
+    }
+
+    public boolean checkEndTime(TimerBoundary timerBoundary)
+    {
+        if(timerBoundary.getRecurrence().getEndDate() == null)
+            return false;
+        return timerBoundary.getUpdateTime().before(new Date());
+    }
+
+    public void setStatusByCrud(TimerBoundary timerBoundary, String status)
+    {
+        timerBoundary.setStatus(status);
+        this.timerCrud.save(timerBoundary.toEntity());
     }
 
 }

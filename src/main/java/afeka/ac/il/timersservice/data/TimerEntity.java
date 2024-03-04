@@ -15,6 +15,8 @@ public class TimerEntity {
     private Date createdAt;
     private String status;
     private Date startTime;
+    private Date updateTime;
+
     private Duration duration;
     private Recurrence recurrence;
     private String deviceId;
@@ -77,6 +79,15 @@ public class TimerEntity {
         return this;
     }
 
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public TimerEntity setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+        return this;
+    }
+
     public Duration getDuration() {
         return duration;
     }
@@ -115,13 +126,14 @@ public class TimerEntity {
 
     @Override
     public String toString() {
-        return "TimerBoundary{" +
+        return "TimerEntity{" +
                 "timerId='" + timerId + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", createdAt=" + createdAt +
                 ", status='" + status + '\'' +
                 ", startTime=" + startTime +
+                ", updateTime=" + updateTime +
                 ", duration=" + duration +
                 ", recurrence=" + recurrence +
                 ", deviceId='" + deviceId + '\'' +

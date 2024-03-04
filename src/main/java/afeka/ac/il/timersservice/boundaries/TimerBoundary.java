@@ -5,6 +5,7 @@ import afeka.ac.il.timersservice.data.Duration;
 import afeka.ac.il.timersservice.boundaries.Recurrence;
 import afeka.ac.il.timersservice.data.TimerEntity;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class TimerBoundary implements Comparable<TimerBoundary> {
@@ -15,6 +16,7 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
     private Date createdAt;
     private String status;
     private Date startTime;
+    private Date updateTime;
     private Duration duration;
     private Recurrence recurrence;
     private String deviceId;
@@ -29,6 +31,7 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
         this.createdAt = createdAt;
         this.status = status;
         this.startTime = startTime;
+        this.updateTime = this.startTime;
         this.duration = duration;
         this.recurrence = recurrence;
         this.deviceId = deviceId;
@@ -41,6 +44,7 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
         this.createdAt = entity.getCreatedAt();
         this.status = entity.getStatus();
         this.startTime = entity.getStartTime();
+        this.updateTime = entity.getUpdateTime();
         this.duration = entity.getDuration();
         this.recurrence = entity.getRecurrence();
         this.deviceId = entity.getDeviceId();
@@ -95,6 +99,14 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
         this.startTime = startTime;
     }
 
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
     public Duration getDuration() {
         return duration;
     }
@@ -135,6 +147,7 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
         rv.setCreatedAt(this.getCreatedAt());
         rv.setStatus(this.getStatus());
         rv.setStartTime(this.getStartTime());
+        rv.setUpdateTime(this.getUpdateTime());
         rv.setDuration(this.getDuration());
         rv.setRecurrence(this.getRecurrence());
         rv.setDeviceId(this.getDeviceId());
@@ -143,9 +156,18 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
         return rv;
     }
 
+    public Date getFinishedTime(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(this.updateTime);
+        calendar.add(Calendar.HOUR_OF_DAY, this.duration.getHours());
+        calendar.add(Calendar.MINUTE, this.duration.getMinutes());
+        calendar.add(Calendar.SECOND, this.duration.getSeconds());
+        return calendar.getTime();
+    }
+
     @Override
     public int compareTo(TimerBoundary other) {
-        return this.startTime.compareTo(other.startTime);
+        return this.updateTime.compareTo(other.updateTime);
     }
 
 
@@ -158,6 +180,7 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
                 ", createdAt=" + createdAt +
                 ", status='" + status + '\'' +
                 ", startTime=" + startTime +
+                ", updateTime=" + updateTime +
                 ", duration=" + duration +
                 ", recurrence=" + recurrence +
                 ", deviceId='" + deviceId + '\'' +
