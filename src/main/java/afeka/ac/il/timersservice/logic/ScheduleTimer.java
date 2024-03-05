@@ -1,5 +1,6 @@
 package afeka.ac.il.timersservice.logic;
 
+import afeka.ac.il.timersservice.boundaries.KMessage;
 import afeka.ac.il.timersservice.boundaries.TimerBoundary;
 import afeka.ac.il.timersservice.data.TimerEntity;
 import afeka.ac.il.timersservice.dataAccess.TimerCrud;
@@ -43,18 +44,25 @@ public class ScheduleTimer {
     @Scheduled(fixedDelay = 5000) // Cron expression for every 60 seconds
     public void checkTimerBoundary() {
 
-        Flux<TimerEntity> entities = this.timerCrud.findAllByStatusHoldOrActice();
+        Flux<TimerEntity> entities = this.timerCrud.findAllByStatusHoldOrActive();
 
         entities.map(TimerBoundary::new)
-                .filter(timerBoundary -> (new Date()).after(timerBoundary.getStartTime()))
-                .subscribe(timer -> manageTimer((TimerBoundary) timer));
+                .filter(timerBoundary -> (new Date()).after(timerBoundary.getUpdateTime()))
+                .flatMap(this::manageTimer)
+                .subscribe(timerBoundary -> {
+                    // You can log the result or perform further actions if needed
+                    System.out.println("Processed timer: " + timerBoundary);
+                });
+
     }
 
 
     public Mono<TimerBoundary> sendToKafka(TimerBoundary timerBoundary){
 
         try{
-            String messageToKafka = this.jackson.writeValueAsString(timerBoundary);
+            KMessage km = new KMessage(timerBoundary);
+            System.err.println(km);
+            String messageToKafka = this.jackson.writeValueAsString(km);
             return Mono.just(messageToKafka)
                     .map(msg ->
                             kafka.send(targetTopic, msg))
@@ -64,14 +72,16 @@ public class ScheduleTimer {
         }
     }
 
-    public void manageTimer(TimerBoundary timerBoundary){
+    public Mono<TimerBoundary> manageTimer(TimerBoundary timerBoundary){
 
         if (timerBoundary.getStatus().equals("active") &&
                 timerBoundary.getFinishedTime().before(new Date())) //If timer is active and if the timer is finished
         {
+            timerBoundary.clacNewUpdateTime();
             setStatusByCrud(timerBoundary,"hold"); // Update in the DB
             // TO DO - SEND TO KAFKA ?
-        } else if(timerBoundary.getUpdateTime().after(new Date())) { //else (hold) and if the timer is need to start
+        } else if(timerBoundary.getStatus().equals("hold") &&
+                timerBoundary.getUpdateTime().before(new Date())) { //If is hold and if the timer is need to start
             // timerBoundary.getStatus() = hold
             // TO DO - SEND TO KAFKA ?
             setStatusByCrud(timerBoundary,"active"); // Update in the DB
@@ -79,7 +89,13 @@ public class ScheduleTimer {
                 setStatusByCrud(timerBoundary,"complete"); // Update in the DB
         }
 
+
         System.err.println(timerBoundary);
+
+        return Mono.just(timerBoundary)
+                .map(TimerBoundary::toEntity) // Assuming you have a method to convert TimerBoundary back to TimerEntity
+                .flatMap(timerCrud::save) // Save the entity to the database
+                .thenReturn(timerBoundary);
 
     }
 
@@ -87,7 +103,7 @@ public class ScheduleTimer {
     {
         if(timerBoundary.getRecurrence().getEndDate() == null)
             return false;
-        return timerBoundary.getUpdateTime().before(new Date());
+        return timerBoundary.getRecurrence().getEndDate().before(new Date());
     }
 
     public void setStatusByCrud(TimerBoundary timerBoundary, String status)

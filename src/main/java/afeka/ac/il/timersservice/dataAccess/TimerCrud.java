@@ -11,6 +11,6 @@ public interface TimerCrud extends ReactiveMongoRepository<TimerEntity, String> 
     public Flux<TimerEntity> findAllByDeviceId(String deviceId);
 
     @Query("{ $or: [ { 'status': 'hold' }, { 'status': 'active' } ] }")
-    public Flux<TimerEntity> findAllByStatusHoldOrActice();
+    public Flux<TimerEntity> findAllByStatusHoldOrActive();
 
 }

@@ -165,6 +165,27 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
         return calendar.getTime();
     }
 
+    public void clacNewUpdateTime(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(this.updateTime);
+        switch (this.getRecurrence().getType()){
+            case DAILY:
+                calendar.add(Calendar.DAY_OF_WEEK ,this.getRecurrence().getInterval());
+                break;
+            case MONTHLY:
+                calendar.add(Calendar.MONTH, this.getRecurrence().getInterval());
+                break;
+            case ANNUALLY:
+                calendar.add(Calendar.YEAR, this.getRecurrence().getInterval());
+                break;
+            case ONCE:
+                break;
+        }
+
+        this.updateTime = calendar.getTime();
+
+    }
+
     @Override
     public int compareTo(TimerBoundary other) {
         return this.updateTime.compareTo(other.updateTime);
