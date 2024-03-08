@@ -84,6 +84,7 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+        this.updateTime = createdAt;
     }
 
     public String getStatus() {
@@ -215,6 +216,7 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
                 ", duration=" + duration +
                 ", recurrence=" + recurrence +
                 ", deviceId='" + deviceId + '\'' +
+                ", deviceType='"+deviceType+'\''+
                 ", deviceAction=" + deviceAction +
                 '}';
     }

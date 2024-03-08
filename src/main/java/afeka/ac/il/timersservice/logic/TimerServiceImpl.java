@@ -14,6 +14,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class TimerServiceImpl implements TimerService{
@@ -29,7 +30,7 @@ public class TimerServiceImpl implements TimerService{
     @Override
     public Mono<TimerBoundary> createTimer(TimerBoundary timer) {
 
-        timer.setTimerId(null);
+        timer.setTimerId(UUID.randomUUID().toString());
         timer.setCreatedAt(new Date());
         timer.setStatus("hold");
 
@@ -50,42 +51,15 @@ public class TimerServiceImpl implements TimerService{
 
 
     private boolean isValidTimer(TimerBoundary timer) {
-        if(timer == null || timer.getTimerId() == null || timer.getTimerId().isEmpty()
-            || timer.getDeviceId() == null || timer.getDeviceId().isEmpty()
-            || timer.getStartTime() == null || timer.getStartTime().before(new Date())
-            || !isValidDuration(timer.getDuration()) || timer.getRecurrence() == null
-            || timer.getRecurrence().getEndDate() == null || timer.getRecurrence().getEndDate().before(timer.getStartTime())
-            || timer.getRecurrence().getInterval() <= 0 || timer.getRecurrence().getType() == null) // TODO: verify type
-                return false;
-        return true;
+        if (timer == null || timer.getTimerId() == null || timer.getTimerId().isEmpty()
+                || timer.getDeviceId() == null || timer.getDeviceId().isEmpty()
+                || timer.getStartTime() == null || timer.getStartTime().before(new Date())
+                || !isValidDuration(timer.getDuration()) || timer.getRecurrence() == null
+                || timer.getRecurrence().getEndDate() == null || timer.getRecurrence().getEndDate().before(timer.getStartTime())
+                || timer.getRecurrence().getInterval() <= 0 || timer.getRecurrence().getType() == null)
+            return false;
 
-
-//        String deviceId = timer.getDeviceId();
-//
-//        if (deviceId == null || deviceId.isEmpty())
-//            return false;
-//
-//        Date startTime = timer.getStartTime();
-//        Date currentTime = new Date();
-//
-//        if (startTime.before(currentTime))
-//            return false;
-//
-//        if (!isValidDuration(timer.getDuration()))
-//            return false;
-//
-//        Recurrence recurrence = timer.getRecurrence();
-//
-//
-//        // Check if interval is a positive integer
-//        if (recurrence.getInterval() <= 0)
-//            return false;
-//
-//
-//        // Check if endDate is optional and has a valid format if present
-//        if (recurrence.getEndDate() != null && recurrence.getEndDate().before(startTime)) {
-//            return false;
-//        }
+    return true;
 
 
     }
@@ -125,12 +99,6 @@ public class TimerServiceImpl implements TimerService{
                                 if (timer.getRecurrence() != null && timer.getRecurrence().getInterval() > 0
                                         && timer.getRecurrence().getEndDate() != null && timer.getRecurrence().getEndDate().after(exists.getStartTime()))
                                     exists.setRecurrence(timer.getRecurrence());
-                                if (timer.getDeviceId() != null && !timer.getDeviceId().isEmpty()
-                                        && timer.getDeviceAction() != null && timer.getDeviceAction().getOnStart() != null
-                                        && timer.getDeviceAction().getOnComplete() != null) {
-                                    exists.setDeviceId(timer.getDeviceId());
-                                    exists.setDeviceAction(timer.getDeviceAction());
-                                }
                             return this.timerCrud.save(exists);
                             }).switchIfEmpty(Mono.defer(() -> Mono.error(new RuntimeException())))
                     .map(TimerBoundary::new);
