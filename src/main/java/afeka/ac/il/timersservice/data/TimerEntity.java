@@ -30,90 +30,81 @@ public class TimerEntity {
         return timerId;
     }
 
-    public TimerEntity setTimerId(String timerId) {
+    public void setTimerId(String timerId) {
         this.timerId = timerId;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public TimerEntity setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
+
     }
 
     public String getDescription() {
         return description;
     }
 
-    public TimerEntity setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
-        return this;
     }
 
     public Date getCreatedAt() {
         return createdAt;
     }
 
-    public TimerEntity setCreatedAt(Date createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-        return this;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public TimerEntity setStatus(String status) {
+    public void setStatus(String status) {
         this.status = status;
-        return this;
     }
 
     public Date getStartTime() {
         return startTime;
     }
 
-    public TimerEntity setStartTime(Date startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
-        return this;
     }
 
     public Date getUpdateTime() {
         return updateTime;
     }
 
-    public TimerEntity setUpdateTime(Date updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-        return this;
     }
 
     public Duration getDuration() {
         return duration;
     }
 
-    public TimerEntity setDuration(Duration duration) {
+    public void setDuration(Duration duration) {
         this.duration = duration;
-        return this;
     }
 
     public Recurrence getRecurrence() {
         return recurrence;
     }
 
-    public TimerEntity setRecurrence(Recurrence recurrence) {
+    public void setRecurrence(Recurrence recurrence) {
         this.recurrence = recurrence;
-        return this;
     }
 
     public String getDeviceId() {
         return deviceId;
     }
 
-    public TimerEntity setDeviceId(String deviceId) {
+    public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
-        return this;
     }
 
     public String getDeviceType(){
@@ -127,9 +118,8 @@ public class TimerEntity {
         return deviceAction;
     }
 
-    public TimerEntity setDeviceAction(DeviceAction deviceAction) {
+    public void setDeviceAction(DeviceAction deviceAction) {
         this.deviceAction = deviceAction;
-        return this;
     }
 
     @Override

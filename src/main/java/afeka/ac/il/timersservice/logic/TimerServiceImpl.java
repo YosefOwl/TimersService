@@ -3,11 +3,8 @@ package afeka.ac.il.timersservice.logic;
 
 import afeka.ac.il.timersservice.boundaries.TimerBoundary;
 import afeka.ac.il.timersservice.data.Duration;
-import afeka.ac.il.timersservice.boundaries.Recurrence;
 import afeka.ac.il.timersservice.boundaries.TYPE;
 import afeka.ac.il.timersservice.dataAccess.TimerCrud;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
