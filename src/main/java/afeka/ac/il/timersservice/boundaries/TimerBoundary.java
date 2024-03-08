@@ -20,11 +20,12 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
     private Duration duration;
     private Recurrence recurrence;
     private String deviceId;
+    private String deviceType;
     private DeviceAction deviceAction;
     public TimerBoundary(){
 
     }
-    public TimerBoundary(String timerId, String name, String description, Date createdAt, String status, Date startTime, Duration duration, Recurrence recurrence, String deviceId, DeviceAction deviceAction) {
+    public TimerBoundary(String timerId, String name, String description, Date createdAt, String status, Date startTime, Duration duration, Recurrence recurrence, String deviceId, String deviceType, DeviceAction deviceAction) {
         this.timerId = timerId;
         this.name = name;
         this.description = description;
@@ -35,6 +36,7 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
         this.duration = duration;
         this.recurrence = recurrence;
         this.deviceId = deviceId;
+        this.deviceType = deviceType;
         this.deviceAction = deviceAction;
     }
     public TimerBoundary(TimerEntity entity){
@@ -48,6 +50,7 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
         this.duration = entity.getDuration();
         this.recurrence = entity.getRecurrence();
         this.deviceId = entity.getDeviceId();
+        this.deviceType = entity.getDeviceType();
         this.deviceAction = entity.getDeviceAction();
     }
 
@@ -127,6 +130,12 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
         return deviceId;
     }
 
+    public String getDeviceType(){
+        return deviceType;
+    }
+    public void setDeviceType(String deviceType){
+        this.deviceType = deviceType;
+    }
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
@@ -151,6 +160,7 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
         rv.setDuration(this.getDuration());
         rv.setRecurrence(this.getRecurrence());
         rv.setDeviceId(this.getDeviceId());
+        rv.setDeviceType(this.getDeviceType());
         rv.setDeviceAction(this.getDeviceAction());
 
         return rv;

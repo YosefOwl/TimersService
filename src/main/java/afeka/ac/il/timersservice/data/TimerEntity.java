@@ -20,6 +20,7 @@ public class TimerEntity {
     private Duration duration;
     private Recurrence recurrence;
     private String deviceId;
+    private String deviceType;
     private DeviceAction deviceAction;
     public TimerEntity(){
 
@@ -115,6 +116,13 @@ public class TimerEntity {
         return this;
     }
 
+    public String getDeviceType(){
+        return deviceType;
+    }
+    public void setDeviceType(String deviceType){
+        this.deviceType = deviceType;
+    }
+
     public DeviceAction getDeviceAction() {
         return deviceAction;
     }
@@ -137,6 +145,7 @@ public class TimerEntity {
                 ", duration=" + duration +
                 ", recurrence=" + recurrence +
                 ", deviceId='" + deviceId + '\'' +
+                ", deviceType='"+ deviceType +'\''+
                 ", deviceAction=" + deviceAction +
                 '}';
     }
