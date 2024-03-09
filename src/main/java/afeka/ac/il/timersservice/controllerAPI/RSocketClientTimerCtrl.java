@@ -71,7 +71,7 @@ public class RSocketClientTimerCtrl {
                 .log();
     }
     @GetMapping(
-            path = {"/{timerId}"},
+            path = {"/timerId={timerId}"},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Mono<TimerBoundary> getTimerById(
             @PathVariable("timerId") String timerId) {
@@ -84,7 +84,7 @@ public class RSocketClientTimerCtrl {
     }
 
     @GetMapping(
-            path = {"/{deviceId}"},
+            path = {"/deviceId={deviceId}"},
             produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
     public Flux<TimerBoundary> getTimerByDeviceId(
             @PathVariable("deviceId") String deviceId) {
@@ -97,7 +97,7 @@ public class RSocketClientTimerCtrl {
     }
 
 
-    @DeleteMapping(path = {"cancel/{timerId}"})
+    @DeleteMapping(path = {"cancel/timerId={timerId}"})
     public Mono<Void> cancelTimerById(
             @PathVariable("timerId") String timerId) {
         return this.requester
@@ -107,7 +107,7 @@ public class RSocketClientTimerCtrl {
                 .log();
     }
 
-    @DeleteMapping(path = {"cancel/{deviceId}"})
+    @DeleteMapping(path = {"cancel/deviceId={deviceId}"})
     public Mono<Void> cancelTimerByDeviceId(
             @PathVariable("deviceId") String deviceId) {
         return this.requester
