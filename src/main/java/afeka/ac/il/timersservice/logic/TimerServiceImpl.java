@@ -51,11 +51,12 @@ public class TimerServiceImpl implements TimerService{
         if (timer == null || timer.getTimerId() == null || timer.getTimerId().isEmpty()
                 || timer.getDeviceId() == null || timer.getDeviceId().isEmpty()
                 || timer.getStartTime() == null || timer.getStartTime().before(new Date())
-                || !isValidDuration(timer.getDuration()) || timer.getRecurrence() == null
-                || timer.getRecurrence().getEndDate() == null || timer.getRecurrence().getEndDate().before(timer.getStartTime())
-                || timer.getRecurrence().getInterval() <= 0 || timer.getRecurrence().getType() == null)
+                || !isValidDuration(timer.getDuration()))
             return false;
-
+        if(timer.getRecurrence() == null || timer.getRecurrence().getType() == null
+                || timer.getRecurrence().getType() != TYPE.ONCE && (timer.getRecurrence().getEndDate() != null && timer.getRecurrence().getEndDate().before(timer.getStartTime())
+                || timer.getRecurrence().getInterval() < 0))
+            return false;
     return true;
 
 
