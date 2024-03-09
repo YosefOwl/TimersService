@@ -8,14 +8,17 @@ public class KMessage {
 
     private String deviceId;
 
+    private String deviceType;
+
     private DeviceAction deviceAction;
 
 
     public KMessage(TimerBoundary timerBoundary)
     {
-        setTimerId(timerBoundary.getTimerId())
+        this.setTimerId(timerBoundary.getTimerId())
                 .setDeviceId(timerBoundary.getDeviceId())
-                .setDeviceAction(timerBoundary.getDeviceAction());
+                .setDeviceAction(timerBoundary.getDeviceAction())
+                .setDeviceId(timerBoundary.getDeviceId());
     }
 
     public String getTimerId() {
@@ -24,6 +27,15 @@ public class KMessage {
 
     public KMessage setTimerId(String timerId) {
         this.timerId = timerId;
+        return this;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public KMessage setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
         return this;
     }
 

@@ -49,7 +49,6 @@ public class RSocketClientTimerCtrl {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Mono<TimerBoundary> createTimer(
             @RequestBody TimerBoundary timer) {
-
         return this.requester
                 .route("create-timer-req-resp")
                 .data(timer)

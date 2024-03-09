@@ -11,33 +11,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-//@Configuration
+@Configuration
 public class TImerListener {
 
-    private ObjectMapper jackson;
-    private TimerService demoService;
     private Log logger = LogFactory.getLog(TImerListener.class);
 
-//    public TImerListener(TimerService demoService) {
-//        this.demoService = demoService;
-//    }
-//    @PostConstruct
-//    public void init() {
-//        this.jackson = new ObjectMapper();
-//    }
-//
-//
-//    @Bean
-//    public Consumer<String> demoTimerSink(){
-//        return stringInput->{
-//            try {
-//
-//                this.logger.trace("*** received: " + stringInput);
-//
-//            }
-//            catch (Exception e) {
-//                this.logger.error(e);
-//            }
-//        };
-//    }
+    @Bean
+    public Consumer<String> demoTimerSink(){
+        return stringInput->{
+            try {
+                System.err.println("*** received: " + stringInput);
+            }
+            catch (Exception e) {
+                this.logger.error(e);
+            }
+        };
+    }
 }

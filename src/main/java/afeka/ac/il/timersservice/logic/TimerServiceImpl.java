@@ -17,11 +17,9 @@ import java.util.UUID;
 public class TimerServiceImpl implements TimerService{
     private final TimerCrud timerCrud;
 
-    private ScheduleTimer scheduleTimer;
 
-    public TimerServiceImpl(TimerCrud timerCrud, ScheduleTimer scheduleTimer){
+    public TimerServiceImpl(TimerCrud timerCrud){
         this.timerCrud = timerCrud;
-        this.scheduleTimer = scheduleTimer;
     }
 
     @Override
@@ -31,6 +29,7 @@ public class TimerServiceImpl implements TimerService{
         timer.setCreatedAt(new Date());
         timer.setStatus("hold");
 
+
         if (timer.getRecurrence().getType() == null)
             timer.getRecurrence().setType(TYPE.ONCE);
 
@@ -38,6 +37,9 @@ public class TimerServiceImpl implements TimerService{
         if (!isValidTimer(timer)){
             return Mono.error(new RuntimeException());
         }
+
+        timer.setUpdateTime(timer.getStartTime());
+        System.out.println("******* creat timer *******");
 
         return Mono.just(timer)
                 .map(TimerBoundary::toEntity)
