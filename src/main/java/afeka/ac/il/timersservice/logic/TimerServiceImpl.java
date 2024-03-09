@@ -38,8 +38,12 @@ public class TimerServiceImpl implements TimerService{
             return Mono.error(new RuntimeException());
         }
 
+        if(timer.getRecurrence().getInterval() == 0 &&
+         timer.getRecurrence().getType() != TYPE.ONCE)
+            timer.getRecurrence().setInterval(1);
+
         timer.setUpdateTime(timer.getStartTime());
-        System.out.println("******* creat timer *******");
+        System.out.println("******* create timer *******");
 
         return Mono.just(timer)
                 .map(TimerBoundary::toEntity)

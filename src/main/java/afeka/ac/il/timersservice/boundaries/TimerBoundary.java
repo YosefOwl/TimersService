@@ -180,7 +180,7 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
         calendar.setTime(this.updateTime);
         switch (this.getRecurrence().getType()){
             case DAILY:
-                calendar.add(Calendar.DAY_OF_WEEK ,this.getRecurrence().getInterval());
+                calendar.add(Calendar.DATE ,this.getRecurrence().getInterval());
                 break;
             case MONTHLY:
                 calendar.add(Calendar.MONTH, this.getRecurrence().getInterval());
@@ -192,7 +192,12 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
                 break;
         }
 
-        this.updateTime = calendar.getTime();
+        if(calendar.getTime().before(this.recurrence.getEndDate()))
+            this.updateTime = calendar.getTime();
+        else
+            this.getRecurrence().setEndDate(new Date());
+
+
 
     }
 

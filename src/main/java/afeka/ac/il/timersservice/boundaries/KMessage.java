@@ -10,14 +10,15 @@ public class KMessage {
 
     private String deviceType;
 
-    private DeviceAction deviceAction;
+    private Object deviceAction;
 
 
-    public KMessage(TimerBoundary timerBoundary)
+    public KMessage(TimerBoundary timerBoundary, boolean isOn)
     {
         this.setTimerId(timerBoundary.getTimerId())
                 .setDeviceId(timerBoundary.getDeviceId())
-                .setDeviceAction(timerBoundary.getDeviceAction())
+                .setDeviceAction(isOn ? timerBoundary.getDeviceAction().getOnStart() :
+                        timerBoundary.getDeviceAction().getOnComplete())
                 .setDeviceId(timerBoundary.getDeviceId());
     }
 
@@ -48,11 +49,11 @@ public class KMessage {
         return this;
     }
 
-    public DeviceAction getDeviceAction() {
+    public Object getDeviceAction() {
         return deviceAction;
     }
 
-    public KMessage setDeviceAction(DeviceAction deviceAction) {
+    public KMessage setDeviceAction(Object deviceAction) {
         this.deviceAction = deviceAction;
         return this;
     }
