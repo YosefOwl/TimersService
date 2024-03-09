@@ -54,7 +54,7 @@ public class TimerServiceImpl implements TimerService{
                 || !isValidDuration(timer.getDuration()))
             return false;
         if(timer.getRecurrence() == null || timer.getRecurrence().getType() == null
-                || timer.getRecurrence().getType() != TYPE.ONCE && (timer.getRecurrence().getEndDate() != null && timer.getRecurrence().getEndDate().before(timer.getStartTime())
+                || (timer.getRecurrence().getType() != TYPE.ONCE && (timer.getRecurrence().getEndDate() != null && timer.getRecurrence().getEndDate().before(timer.getStartTime()))
                 || timer.getRecurrence().getInterval() < 0))
             return false;
     return true;
