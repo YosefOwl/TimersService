@@ -166,7 +166,7 @@ public class TimerBoundary implements Comparable<TimerBoundary> {
         return rv;
     }
 
-    public Date getFinishedTime(){
+    public Date calculateFinishedTime(){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(this.updateTime);
         calendar.add(Calendar.HOUR_OF_DAY, this.duration.getHours());

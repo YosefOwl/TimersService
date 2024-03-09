@@ -6,7 +6,6 @@ import afeka.ac.il.timersservice.data.TimerEntity;
 import afeka.ac.il.timersservice.dataAccess.TimerCrud;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -75,7 +74,7 @@ public class ScheduleTimer {
     public Mono<TimerBoundary> manageTimer(TimerBoundary timerBoundary){
 
         if (timerBoundary.getStatus().equals("active") &&
-                timerBoundary.getFinishedTime().before(new Date())) //If timer is active and if the timer is finished
+                timerBoundary.calculateFinishedTime().before(new Date())) //If timer is active and if the timer is finished
         {
             timerBoundary.clacNewUpdateTime();
             setStatusByCrud(timerBoundary,"hold"); // Update in the DB
