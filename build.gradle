@@ -33,6 +33,12 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0'
 	//developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 
+	// Log4j for logging
+	implementation 'org.apache.logging.log4j:log4j-api:2.14.1'
+	implementation 'org.apache.logging.log4j:log4j-core:2.14.1'
+	// Logstash Logback Encoder
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.2'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'org.springframework.cloud:spring-cloud-stream-test-binder'

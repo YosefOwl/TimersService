@@ -6,6 +6,8 @@ import afeka.ac.il.timersservice.data.Duration;
 import afeka.ac.il.timersservice.boundaries.TYPE;
 import afeka.ac.il.timersservice.dataAccess.TimerCrud;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -16,7 +18,7 @@ import java.util.UUID;
 @Service
 public class TimerServiceImpl implements TimerService{
     private final TimerCrud timerCrud;
-
+    private final Logger logger = LogManager.getLogger(TimerServiceImpl.class);
 
     public TimerServiceImpl(TimerCrud timerCrud){
         this.timerCrud = timerCrud;
@@ -43,8 +45,7 @@ public class TimerServiceImpl implements TimerService{
             timer.getRecurrence().setInterval(1);
 
         timer.setUpdateTime(timer.getStartTime());
-        System.out.println("******* create timer *******");
-
+        logger.info("****** timer created ******");
         return Mono.just(timer)
                 .map(TimerBoundary::toEntity)
                 .flatMap(this.timerCrud::save)
