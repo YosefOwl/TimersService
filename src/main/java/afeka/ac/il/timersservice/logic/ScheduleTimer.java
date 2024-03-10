@@ -1,8 +1,6 @@
 package afeka.ac.il.timersservice.logic;
 
-import afeka.ac.il.timersservice.boundaries.KMessage;
-import afeka.ac.il.timersservice.boundaries.TYPE;
-import afeka.ac.il.timersservice.boundaries.TimerBoundary;
+import afeka.ac.il.timersservice.boundaries.*;
 import afeka.ac.il.timersservice.data.TimerEntity;
 import afeka.ac.il.timersservice.dataAccess.TimerCrud;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,8 +20,8 @@ public class ScheduleTimer {
     private ObjectMapper jackson;
     private final StreamBridge kafka;
     private final TimerCrud timerCrud;
-
     private String targetTopic;
+
 
     public  ScheduleTimer(TimerCrud timerCrud,StreamBridge kafka){
         this.kafka = kafka;
@@ -39,8 +37,8 @@ public class ScheduleTimer {
     public void setTargetTopic(String targetTopic){ this.targetTopic = targetTopic; }
 
 
-    // This method will be executed every second
-    @Scheduled(fixedDelay = 5000) // Cron expression for every 60 seconds
+    // This method will be executed every 60 second
+    @Scheduled(fixedDelay = 60000) // Cron expression for every 60 seconds
     public void checkTimerBoundary() {
 
         Flux<TimerEntity> entities = this.timerCrud.findAllByStatusHoldOrActive();
@@ -61,9 +59,20 @@ public class ScheduleTimer {
 
         try{
             KMessage km = new KMessage(timerBoundary,isOn);
-
             System.err.println("sendToKafka " + km);
-            String messageToKafka = this.jackson.writeValueAsString(km);
+            Map<String, Object> messageDetails = new HashMap<>();
+            messageDetails.put(isOn ? "onStart": "onComplete", km);
+
+
+            MessageBoundary message = new MessageBoundary()
+                    .setMessageType("timerNotification")
+                    .setExternalReferences(new ExternalReferenceBoundary()
+                            .setService("timerService")
+                            .setExternalServiceId(timerBoundary.getTimerId()))
+                    .setMessageDetails(messageDetails)
+                    .setSummary("message from timers on start or complete timer");
+
+            String messageToKafka = this.jackson.writeValueAsString(message);
 
             return Mono.just(messageToKafka)
                     .map(msg ->
